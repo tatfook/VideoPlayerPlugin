@@ -39,7 +39,7 @@ function PlayerController:ctor()
     }
     VideoPlayerPlugin:_ActiveDll(self.id,"Create",params)
     self.state = {medias = {}}
-    self:BindFrame2Texture("_VideoRT_"..self.id)
+    self:BindFrameToTexture("_VideoRT_"..self.id)
 end
 
 function PlayerController:_SetPlayerState(info)
@@ -71,7 +71,7 @@ function PlayerController:GetVideoRT()
     return self._textureName
 end
 
-function PlayerController:BindFrame2Texture(textureName)
+function PlayerController:BindFrameToTexture(textureName)
     self._textureName = textureName
     if self._textureAsset then
         self._textureAsset:Release()
@@ -115,6 +115,14 @@ end
 ]]
 function PlayerController:GetState()
     return self.state
+end
+
+function PlayerController:SetLooping(bLoop)
+    self.bLoop = bLoop;
+end
+
+function PlayerController:IsLooping()
+    return self.bLoop;
 end
 
 --开始播放
@@ -346,9 +354,12 @@ function PlayerController:OnActiveCallback(msg)
             msg.callbackType = nil
             local _state = self:_SetPlayerState(msg)
             if callbackType=="onPlayPauseStop" or callbackType=="onPosition" or callbackType=="onComplete"
-            or callbackType=="onVolume" or callbackType=="onRate" or callbackType=="onOpen"
+                or callbackType=="onVolume" or callbackType=="onRate" or callbackType=="onOpen"
             then
                 GameLogic.GetFilters():apply_filters('video_play_callback',callbackType,id,_state)
+                if(self:IsLooping() and callbackType=="onComplete") then
+                    self:Seek(0);
+                end
             elseif callbackType=="onVideoDimensions" then
                 GameLogic.GetFilters():apply_filters('video_play_callback',callbackType,id,_state,msg.width,msg.height)
             elseif callbackType=="onVideoFrame" then
