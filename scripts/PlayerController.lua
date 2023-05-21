@@ -183,7 +183,7 @@ end
 
 --播放列表中指定的一个
 function PlayerController:JumpToIndex(index)
-    if index<0 or index>=#self.state.medias then
+    if index<0 --[[or index>=#self.state.medias]] then
         return
     end
     VideoPlayerPlugin:_ActiveDll(self.id,"JumpToIndex",{
@@ -224,6 +224,7 @@ function PlayerController:AddFileToPlayList(filename,index,autoPlay)
     local cmd = "Insert"
     if index==nil then
         cmd = "Add"
+        index = #self.state.medias+0
     end
     VideoPlayerPlugin:_ActiveDll(self.id,cmd,{
         type = "MediaType.file",
@@ -255,6 +256,7 @@ function PlayerController:AddUrlToPlayList(url,index,autoPlay)
     local cmd = "Insert"
     if index==nil then
         cmd = "Add"
+        index = #self.state.medias+0
     end
     VideoPlayerPlugin:_ActiveDll(self.id,cmd,{
         type = "MediaType.network",
@@ -359,6 +361,7 @@ function PlayerController:OnActiveCallback(msg)
                 GameLogic.GetFilters():apply_filters('video_play_callback',callbackType,id,_state)
                 if(self:IsLooping() and callbackType=="onComplete") then
                     self:Seek(0);
+                    self:Resume();
                 end
             elseif callbackType=="onVideoDimensions" then
                 GameLogic.GetFilters():apply_filters('video_play_callback',callbackType,id,_state,msg.width,msg.height)
