@@ -41,6 +41,7 @@ extern "C" {
 	CORE_EXPORT_DECL void LibInit();
 	CORE_EXPORT_DECL void LibActivate(int nType, void* pVoid);
 	CORE_EXPORT_DECL void LibInitParaEngine(ParaEngine::IParaEngineCore* pCoreInterface);
+	CORE_EXPORT_DECL void DllForceTerm();
 #ifdef __cplusplus
 }   /* extern "C" */
 #endif
@@ -106,12 +107,12 @@ public:
 
 	const char* Category()
 	{
-		return "Movie Codec";
+		return "Video Player Plugin";
 	}
 
 	const char* InternalName()
 	{
-		return "Movie Codec";
+		return "Video Player Plugin";
 	}
 
 	HINSTANCE HInstance()
@@ -158,6 +159,11 @@ CORE_EXPORT_DECL ClassDescriptor* LibClassDesc(int i)
 CORE_EXPORT_DECL void LibInit()
 {
 	Init();
+}
+
+CORE_EXPORT_DECL void DllForceTerm()
+{
+	DisposeAllPlayer();
 }
 
 CORE_EXPORT_DECL void LibActivate(int nType, void* pVoid)

@@ -141,6 +141,17 @@ void DisposePlayerState(int32_t id) {
 	_stateMap.erase(id);
 }
 
+void DisposeAllPlayer()
+{
+	for (auto iter = _stateMap.begin(); iter != _stateMap.end(); iter++) {
+		int id = iter->first;
+		::PlayerStop(id);
+		::PlayerDispose(id);
+		delete _stateMap[id];
+	}
+	_stateMap.clear();
+}
+
 void Init() {
 	_callbackObj.onPlayPauseStop = [](int32_t id, ::PlayerState* state) {
 		auto& data = CreateCallbackProxy(id, state);

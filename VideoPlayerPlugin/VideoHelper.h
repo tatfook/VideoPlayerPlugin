@@ -26,6 +26,8 @@ NPLInterface::NPLObjectProxy& CreateCallbackProxy(int32_t id, ::PlayerState* sta
 
 void DisposePlayerState(int32_t id);
 
+void DisposeAllPlayer();
+
 void Init();
 
 void NPL_Activate(NPL::INPLRuntimeState* pState, std::string activateFile, NPLInterface::NPLObjectProxy& data);
